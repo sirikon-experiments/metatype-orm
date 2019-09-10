@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+
+  db:
+    image: postgres:11.2
+    restart: always
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=metatype
