@@ -2,11 +2,13 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/sirikon-experiments/metatype-orm/typesystem"
 	"log"
 	"reflect"
+	"strconv"
 )
 
 func main() {
@@ -19,9 +21,22 @@ func main() {
 		typesystem.CreateFieldDefinition(reflect.TypeOf(s)),
 		typesystem.CreateFieldDefinition(reflect.TypeOf(b)))
 
-	for _, field := range result {
-		fmt.Println(field.GetValue())
+	dict := make(map[string]interface{})
+	for i, field := range result {
+		dict[strconv.Itoa(i)] = field.GetValue()
 	}
+
+	jsonResult1, err := json.Marshal(dict); handle(err)
+
+	array := make([]interface{}, len(result))
+	for i, field := range result {
+		array[i] = field.GetValue()
+	}
+
+	jsonResult2, err := json.Marshal(array); handle(err)
+
+	fmt.Println(string(jsonResult1))
+	fmt.Println(string(jsonResult2))
 }
 
 func query(s string, fieldDefinitions ...typesystem.FieldDefinition) []*typesystem.Field {
