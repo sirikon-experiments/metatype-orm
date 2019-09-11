@@ -13,10 +13,11 @@ func main() {
 	var i int
 	var s string
 	var b bool
+
 	result := query("SELECT 2, 'hello', true",
-		typesystem.FieldDefinition{Type: reflect.TypeOf(i)},
-		typesystem.FieldDefinition{Type: reflect.TypeOf(s)},
-		typesystem.FieldDefinition{Type: reflect.TypeOf(b)})
+		typesystem.CreateFieldDefinition(reflect.TypeOf(i)),
+		typesystem.CreateFieldDefinition(reflect.TypeOf(s)),
+		typesystem.CreateFieldDefinition(reflect.TypeOf(b)))
 
 	for _, field := range result {
 		fmt.Println(field.GetValue())
