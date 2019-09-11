@@ -4,28 +4,52 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"github.com/sirikon-experiments/metatype-orm/typesystem"
 	"log"
 	"reflect"
 )
 
 func main() {
+	var i int
+	var s string
+	var b bool
+	result := query("SELECT 2, 'hello', true",
+		typesystem.FieldDefinition{Type: reflect.TypeOf(i)},
+		typesystem.FieldDefinition{Type: reflect.TypeOf(s)},
+		typesystem.FieldDefinition{Type: reflect.TypeOf(b)})
+
+	for _, field := range result {
+		fmt.Println(field.GetValue())
+	}
+}
+
+func query(s string, fieldDefinitions ...typesystem.FieldDefinition) []*typesystem.Field {
+	result := make([]*typesystem.Field, len(fieldDefinitions))
+
 	connStr := "user=postgres password=1234 dbname=metatype sslmode=disable"
 	db, err := sql.Open("postgres", connStr); handle(err)
-
-	rows, err := db.Query(`SELECT 1`); handle(err)
+	rows, err := db.Query(s); handle(err)
 
 	defer rows.Close()
 	for rows.Next() {
-		t := reflect.TypeOf(3)
-		data := reflect.New(t).Interface()
-		err = rows.Scan(&data); handle(err)
-		fmt.Println(data)
+		data := make([]interface{}, len(fieldDefinitions))
+		for i, fieldDef := range fieldDefinitions {
+			v := reflect.New(fieldDef.Type).Interface()
+			data[i] = v
+		}
+
+		err = rows.Scan(data...); handle(err)
+
+		for i, fieldDef := range fieldDefinitions {
+			v := data[i]
+			v = reflect.ValueOf(v).Elem().Interface()
+			field := typesystem.CreateField(fieldDef)
+			field.SetValue(v)
+			result[i] = field
+		}
 	}
 
-	//
-	//field := &typesystem.Field{}
-	//field.SetValueString("hehehe")
-	//fmt.Println(field.GetValueString())
+	return result
 }
 
 func handle(err error)  {
