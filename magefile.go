@@ -2,8 +2,11 @@
 
 package main
 
-import "fmt"
-
-func Build() {
-	fmt.Println("Build")
-}
+import (
+	// mage:import
+	_ "github.com/sirikon-experiments/metatype-orm/scripts"
+	// mage:import db
+	_ "github.com/sirikon-experiments/metatype-orm/scripts/db"
+	// mage:import devenv
+	_ "github.com/sirikon-experiments/metatype-orm/scripts/devenv"
+)

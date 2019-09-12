@@ -16,7 +16,7 @@ func main() {
 	var s string
 	var b bool
 
-	result := query("SELECT 2, 'hello', true",
+	result := query("SELECT id, name, active FROM events",
 		typesystem.CreateFieldDefinition(reflect.TypeOf(i)),
 		typesystem.CreateFieldDefinition(reflect.TypeOf(s)),
 		typesystem.CreateFieldDefinition(reflect.TypeOf(b)))
