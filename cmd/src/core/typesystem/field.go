@@ -4,7 +4,7 @@ import "reflect"
 
 type Field struct {
 	definition FieldDefinition
-	value interface{}
+	value      interface{}
 }
 
 func CreateField(def FieldDefinition) *Field {
@@ -26,4 +26,8 @@ func (f *Field) SetValue(value interface{}) {
 
 func (f *Field) GetType() reflect.Type {
 	return f.definition.Type
+}
+
+func (f *Field) GetName() string {
+	return f.definition.Name
 }
