@@ -2,15 +2,24 @@ package sql
 
 import (
 	"database/sql"
-	"github.com/sirikon-experiments/metatype-orm/cmd/src/core/typesystem"
+	"github.com/sirikon-experiments/metatype-orm/src/core/typesystem"
 	"reflect"
+	"strings"
 )
 
 type DataRepository struct {
 }
 
 func (dr *DataRepository) GetAll(itemDef typesystem.ItemDefinition) ([]*typesystem.Item, error) {
-	data, err := query("SELECT id, name, active FROM events", itemDef.Fields...)
+	sqlQuery := "SELECT "
+	cols := make([]string, len(itemDef.Fields))
+	for i, field := range itemDef.Fields {
+		cols[i] = field.Name
+	}
+	sqlQuery += strings.Join(cols, ", ")
+	sqlQuery += " FROM "+itemDef.Name
+
+	data, err := query(sqlQuery, itemDef.Fields...)
 	if err != nil {
 		return nil, err
 	}

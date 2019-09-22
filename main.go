@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/sirikon-experiments/metatype-orm/cmd/src/core"
-	"github.com/sirikon-experiments/metatype-orm/cmd/src/core/typesystem"
-	"github.com/sirikon-experiments/metatype-orm/cmd/src/sql"
+	"github.com/sirikon-experiments/metatype-orm/src/core"
+	"github.com/sirikon-experiments/metatype-orm/src/core/typesystem"
+	"github.com/sirikon-experiments/metatype-orm/src/sql"
 	"log"
 	"reflect"
 )
